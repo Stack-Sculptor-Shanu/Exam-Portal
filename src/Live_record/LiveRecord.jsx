@@ -3,7 +3,7 @@ import * as faceapi from "face-api.js";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs";
 import { toast, ToastContainer } from 'react-toastify'; // Import toastify
-// import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
 const LiveRecord = ({ onViolation }) => {
   const videoRef = useRef(null);

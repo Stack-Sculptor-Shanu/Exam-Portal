@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import LiveRecord from "../../../Live_record/LiveRecord";
 import { useNavigate } from "react-router-dom";
+import LiveFaceDetection from "./LiveFaceDetection";
+// import ConfirmationModal from "./ConfirmationModal";  // Import the modal component
+import Confirmation from "./Confirmation";
 
 const questions = [
   { id: 1, question: "What is React?", options: ["Library", "Framework", "Language", "Database"] },
@@ -13,6 +15,9 @@ const LiveExams = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes timer
+  const [stopCamera, setStopCamera] = useState(false); // New state to control camera stopping
+  const [confirm, setConfirm] = useState(false); // New state to control modal visibility
+  const [examSubmitted, setExamSubmitted] = useState(false);
 
   // Prevent navigation away from the exam
   useEffect(() => {
@@ -76,7 +81,7 @@ const LiveExams = () => {
       selectedAnswer: selectedAnswers[index] || "No answer selected",
     }));
     console.log("Submitted Answers:", results);
-
+    setExamSubmitted(true);
     // Navigate to the result page
     navigate("/result");
   };
@@ -88,6 +93,20 @@ const LiveExams = () => {
       delete newAnswers[currentQuestion];  // Remove the answer for the current question
       return newAnswers;
     });
+  };
+
+  const handleEndTest = () => {
+    setConfirm(true); // Show the confirmation modal
+  };
+
+  const handleConfirmEndTest = () => {
+    setStopCamera(true); // Stop the camera when the test ends
+    handleSubmit(); // Submit the exam
+    setConfirm(false); // Close the modal
+  };
+
+  const handleCancelEndTest = () => {
+    setConfirm(false); // Close the modal if canceled
   };
 
   const isNextDisabled = !selectedAnswers[currentQuestion];
@@ -162,11 +181,20 @@ const LiveExams = () => {
           ⏳ {formatTime(timeLeft)}
         </div>
         {/* Live Camera Recording */}
-        <LiveRecord onViolation={handleSubmit} />
-        <button className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg" onClick={handleSubmit}>
+        <LiveFaceDetection stopCamera={stopCamera} />
+        <button className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg" onClick={handleEndTest}>
           End Test
         </button>
       </div>
+
+      {/* Confirmation Modal */}
+      {confirm && (
+        <Confirmation
+          message="Are you sure you want to end the test?"
+          onConfirm={handleConfirmEndTest}
+          onCancel={handleCancelEndTest}
+        />
+      )}
     </div>
   );
 };
