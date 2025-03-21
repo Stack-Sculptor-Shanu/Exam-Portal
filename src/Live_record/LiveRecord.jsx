@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs";
+import { toast, ToastContainer } from 'react-toastify'; // Import toastify
+// import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
 const LiveRecord = ({ onViolation }) => {
   const videoRef = useRef(null);
@@ -34,12 +36,18 @@ const LiveRecord = ({ onViolation }) => {
       if (!video) return;
 
       const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+      console.log(detections)
       const objects = await objectModel.detect(video);
 
       drawCanvas(detections, objects);
 
       const faceCount = detections.length;
       const hasMobile = objects.some((obj) => obj.class === "cell phone");
+
+      // If more than one person is detected, show a toast message
+      if (faceCount > 1) {
+        showToastMessage();
+      }
 
       if (faceCount > 1 || hasMobile) {
         handleWarning();
@@ -84,10 +92,15 @@ const LiveRecord = ({ onViolation }) => {
     });
   };
 
+  const showToastMessage = () => {
+    toast.info("More than one person detected!", { autoClose: 3000 });
+  };
+
   return (
     <div className="relative">
       <video ref={videoRef} autoPlay playsInline className="w-full h-full" />
       <canvas ref={canvasRef} className="absolute top-0 left-0" />
+      <ToastContainer /> {/* Toast container to display toasts */}
     </div>
   );
 };
