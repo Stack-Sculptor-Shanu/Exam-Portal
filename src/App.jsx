@@ -12,6 +12,7 @@ import Exams from './components/Examination/LiveExams/Exams'
 import MockTest from './components/Examination/mock/MockTest'
 import Instructions from './components/Examination/LiveExams/instructions'
 import Result from './components/Result/Result'
+import AdminLogin from './Admin/AdminLogin'
 
 function App() {
   const route = createBrowserRouter([
@@ -54,6 +55,10 @@ function App() {
           {
             path:"/result",
             element:<Result/>
+          },
+          {
+            path:'/AdminLogin',
+            element: <AdminLogin/>
           }
       ]
     },

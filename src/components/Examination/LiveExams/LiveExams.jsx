@@ -83,7 +83,14 @@ const LiveExams = () => {
     console.log("Submitted Answers:", results);
     setExamSubmitted(true);
     // Navigate to the result page
-    navigate("/result");
+    navigate("/result",{replace:true});
+    setStopCamera(true);
+    window.history.pushState(null, "", window.location.href);
+
+  // Listen to the back button event and prevent going back
+  window.addEventListener("popstate", () => {
+    window.history.pushState(null, "", window.location.href);
+  });
   };
 
   const handleReset = () => {
@@ -103,6 +110,8 @@ const LiveExams = () => {
     setStopCamera(true); // Stop the camera when the test ends
     handleSubmit(); // Submit the exam
     setConfirm(false); // Close the modal
+    const navbar = document.getElementById("navigationbar");
+    if (navbar) navbar.style.display = "";
   };
 
   const handleCancelEndTest = () => {

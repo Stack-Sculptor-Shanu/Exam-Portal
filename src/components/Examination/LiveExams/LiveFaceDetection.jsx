@@ -80,11 +80,11 @@ const LiveFaceDetection = ({ stopCamera }) => {
   }, [stopCamera]);  // Re-run effect when stopCamera changes
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center p-4">
       <h1 className="text-2xl font-semibold mb-4 text-center">Live Face Detection</h1>
       
       {/* Video Section */}
-      <div className="relative w-full max-w-2xl mb-4">
+      <div className="relative w-full max-w-md mb-4">
         <video
           ref={videoRef}
           autoPlay
